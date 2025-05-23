@@ -17,16 +17,16 @@ function MindMap() {
     const [stickerOffset, setStickerOffset] = useState({ x: 0, y: 0 });
 
     const availableStickers = [
-        '/public/11.png',
-        '/public/12.png',
-        '/public/13.png',
-        '/public/14.png',
-        '/public/15.png',
-        '/public/16.png',
-        '/public/17.png',
-        '/public/18.png',
-        '/public/19.png',
-        '/public/20.png',
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFSIOdDnSwdltTbz6NhAGS5PoAJbOwR5xaRQ&s',
+        'https://www.parazitakusok.ru/images/item/3381/item_96_1479227684_152.jpg',
+        'https://cdn-icons-png.flaticon.com/512/7871/7871481.png',
+        'https://i.pinimg.com/564x/4b/51/73/4b51731c6c178615c9e2da670404c192.jpg',
+        'https://www.parazitakusok.ru/images/item/3379/item_96_1479227387_931.jpg',
+        'https://cp-vl.ru/uploads/item/6c4/b26d5-1588250812_750x450.png',
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQdDVf-Q4cYw26jsk0Q2hnxuIIMGWH3o2vksQ&s',
+        'https://alfabank.servicecdn.ru/site-upload/6b/5d/5090/BenefitBlock_First.png',
+        'https://vinyl-market.ru/images/shop_items/865.jpg.webp',
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-QOnGFxtROcUkICcQ7hzb_MRk1zutImfkdw&s',
     ];
 
     const [newNodeStyle, setNewNodeStyle] = useState({
