@@ -304,5 +304,7 @@ body, html {
 #mindmap-area {
     min-width: 100vw;
     min-height: 100vh;
-    overflow: visible;
+    background: #ffffff; /* явно задаём белый фон */
+    position: relative;  /* исправить некорректное значение */
 }
+

@@ -103,45 +103,17 @@ function MindMap() {
         const area = document.getElementById('mindmap-area');
         if (!area) return;
 
-        // Клонируем всю зону
-        const clone = area.cloneNode(true);
-        clone.style.position = 'absolute';
-        clone.style.top = '0';
-        clone.style.left = '0';
-        clone.style.zIndex = '-1';
-        clone.style.opacity = '1';
-        clone.style.background = '#ffffff';
-
-        // Удаляем стили, создающие прозрачность
-        clone.querySelectorAll('*').forEach(el => {
-            el.style.opacity = '1';
-            el.style.filter = 'none';
-            el.style.backdropFilter = 'none';
-
-            // заменим rgba на rgb
-            const bg = window.getComputedStyle(el).backgroundColor;
-            if (bg.includes('rgba')) {
-                const rgb = bg.replace(/rgba\\(([^,]+),([^,]+),([^,]+),[^)]+\\)/, 'rgb($1,$2,$3)');
-                el.style.backgroundColor = rgb;
-            }
+        html2canvas(area, {
+            useCORS: true,
+            scale: 2,
+        }).then((canvas) => {
+            const link = document.createElement('a');
+            link.download = 'mindmap.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
         });
-
-        document.body.appendChild(clone);
-
-        setTimeout(() => {
-            html2canvas(clone, {
-                backgroundColor: '#FFFASS',
-                scale: 2,
-                useCORS: true,
-            }).then((canvas) => {
-                const link = document.createElement('a');
-                link.download = 'mindmap.png';
-                link.href = canvas.toDataURL('image/png');
-                link.click();
-                document.body.removeChild(clone);
-            });
-        }, 100);
     };
+
 
 
     const getNodeDOMCenter = (id) => {
@@ -426,10 +398,60 @@ function MindMap() {
                 {showCreateModal && (
                     <div className="modal-overlay">
                         <div className="modal">
-                            {/* настройки */}
+                            <h3>🆕 Создать новую идею</h3>
+
+                            <label>Форма:
+                                <select value={newNodeStyle.shape}
+                                        onChange={e => setNewNodeStyle({...newNodeStyle, shape: e.target.value})}>
+                                    <option value="rounded">Круглая</option>
+                                    <option value="square">Квадратная</option>
+                                    <option value="shadowed">С тенью</option>
+                                </select>
+                            </label>
+
+                            <label>Цвет карточки:
+                                <input type="color" value={newNodeStyle.cardColor}
+                                       onChange={e => setNewNodeStyle({...newNodeStyle, cardColor: e.target.value})}/>
+                            </label>
+
+                            <label>Цвет текста:
+                                <input type="color" value={newNodeStyle.textColor}
+                                       onChange={e => setNewNodeStyle({...newNodeStyle, textColor: e.target.value})}/>
+                            </label>
+
+                            <label>Цвет линий:
+                                <input type="color" value={newNodeStyle.lineColor}
+                                       onChange={e => setNewNodeStyle({...newNodeStyle, lineColor: e.target.value})}/>
+                            </label>
+
+                            <label>Шрифт:
+                                <select value={newNodeStyle.fontFamily}
+                                        onChange={e => setNewNodeStyle({...newNodeStyle, fontFamily: e.target.value})}>
+                                    <option value="Arial">Arial</option>
+                                    <option value="Comic Sans MS">Comic Sans MS</option>
+                                    <option value="Courier New">Courier New</option>
+                                    <option value="Georgia">Georgia</option>
+                                    <option value="Verdana">Verdana</option>
+                                </select>
+                            </label>
+
+                            <label>Размер текста:
+                                <input type="range" min="12" max="32" value={newNodeStyle.fontSize}
+                                       onChange={e => setNewNodeStyle({
+                                           ...newNodeStyle,
+                                           fontSize: parseInt(e.target.value)
+                                       })}/>
+                                <span>{newNodeStyle.fontSize}px</span>
+                            </label>
+
+                            <div className="modal-actions">
+                                <button onClick={() => setShowCreateModal(false)}>❌ Отмена</button>
+                                <button onClick={createNodeWithStyle}>✅ Создать</button>
+                            </div>
                         </div>
                     </div>
                 )}
+
             </div>
         </div>
     );
