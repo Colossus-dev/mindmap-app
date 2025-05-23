@@ -83,19 +83,53 @@ function MindMap() {
         const area = document.getElementById('mindmap-area');
         if (!area) return;
 
+        // Сохраняем текущие стили и временно убираем прозрачность
+        const originalOpacity = area.style.opacity;
+        const originalFilter = area.style.filter;
+        area.style.opacity = '1';
+        area.style.filter = 'none';
+
+        // также уберём прозрачность у всех узлов
+        const nodes = area.querySelectorAll('.node');
+        const originalNodeStyles = [];
+
+        nodes.forEach((node) => {
+            originalNodeStyles.push({
+                el: node,
+                opacity: node.style.opacity,
+                background: node.style.backgroundColor,
+            });
+
+            node.style.opacity = '1';
+            const computedBg = window.getComputedStyle(node).backgroundColor;
+            if (computedBg.includes('rgba')) {
+                const solid = computedBg.replace(/rgba\\(([^,]+),([^,]+),([^,]+),[^)]+\\)/, 'rgb($1,$2,$3)');
+                node.style.backgroundColor = solid;
+            }
+        });
+
         setTimeout(() => {
             html2canvas(area, {
                 backgroundColor: '#ffffff',
                 scale: 2,
-                useCORS: true
+                useCORS: true,
             }).then((canvas) => {
                 const link = document.createElement('a');
                 link.download = 'mindmap.png';
                 link.href = canvas.toDataURL('image/png');
                 link.click();
+
+                // Восстанавливаем стили
+                area.style.opacity = originalOpacity;
+                area.style.filter = originalFilter;
+                originalNodeStyles.forEach(({ el, opacity, background }) => {
+                    el.style.opacity = opacity;
+                    el.style.backgroundColor = background;
+                });
             });
-        }, 100); // задержка 100 мс
+        }, 100);
     };
+
 
 
 
@@ -134,7 +168,7 @@ function MindMap() {
                 <div className="button-panel">
                     <button className="add-button" onClick={() => setShowCreateModal(true)}>➕ Добавить идею</button>
                     <button className="connect-button" onClick={connectNodes}>🔗 Связать</button>
-                    <button className="export-btn" onClick={exportAsPNG}>🖼 PNG</button>
+                    <button className="export-btn" onClick={exportAsPNG}>🖼 Сохранить</button>
                 </div>
             )}
             <div id="mindmap-area">

@@ -13,7 +13,6 @@ function App() {
                 <div className="navbar-logo"><a href="/">🌟 MindMap </a> </div>
                 <ul className="navbar-links">
                     <li><a href="/">Главная</a></li>
-                    {showMindMap && <li><a href="#mindmap">Карта</a></li>}
                     <li><a href="#faq">FAQ</a></li>
                 </ul>
             </nav>
