@@ -1,0 +1,308 @@
+/* Удаление отступов и растягивание на весь экран */
+body, html {
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    height: 100%;
+    width: 100%;
+}
+
+.mindmap-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #ffe6fa, #e0f7ff);
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    overflow: hidden;
+}
+
+/* Заголовок */
+.header-banner {
+    position: absolute;
+    top: 0;
+    width: 100%;
+    text-align: center;
+    padding: 25px;
+    font-size: 30px;
+    font-weight: bold;
+    background: linear-gradient(90deg, #f093fb, #f5576c);
+    color: #fff;
+    border-bottom: 4px solid #ffc107;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    z-index: 10;
+    text-shadow: 1px 1px #d63384;
+}
+
+/* Панель кнопок */
+.button-panel {
+    position: absolute;
+    top: 90px;
+    left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 14px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.6), rgba(255,255,255,0.3));
+    border-radius: 16px;
+    backdrop-filter: blur(12px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    z-index: 3;
+    transition: all 0.4s ease-in-out;
+    animation: slideIn 0.4s ease forwards;
+}
+
+/* Анимация появления панели */
+@keyframes slideIn {
+    0% { opacity: 0; transform: translateX(-30px); }
+    100% { opacity: 1; transform: translateX(0); }
+}
+
+/* Кнопка бургер-меню */
+.burger-toggle {
+    position: absolute;
+    top: 30px;
+    left: 25px;
+    padding: 8px 14px;
+    font-size: 22px;
+    border: none;
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 4;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+}
+
+.burger-toggle:hover {
+    background: linear-gradient(135deg, #ff6a88, #ffb199);
+    transform: rotate(90deg);
+}
+
+/* Кнопки */
+.add-button, .connect-button, .export-btn {
+    padding: 10px 16px;
+    font-size: 15px;
+    border: none;
+    border-radius: 24px;
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.add-button:hover, .connect-button:hover, .export-btn:hover {
+    background: linear-gradient(135deg, #ff6a88, #ffb199);
+    transform: scale(1.05);
+}
+
+/* Узлы */
+.node {
+    position: absolute;
+    width: 180px;
+    min-height: 70px;
+    border: 3px dashed #ffa000;
+    padding: 10px;
+    cursor: grab;
+    user-select: none;
+    box-shadow: 4px 6px 15px rgba(0,0,0,0.1);
+    animation: bounceIn 0.5s ease;
+    transition: transform 0.2s ease;
+    z-index: 3;
+}
+
+.node:hover {
+    transform: scale(1.02);
+}
+
+@keyframes bounceIn {
+    0% { transform: scale(0.3); opacity: 0; }
+    50% { transform: scale(1.1); }
+    70% { transform: scale(0.95); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.node.selected {
+    border-color: #4caf50;
+    background-color: #e8f5e9;
+}
+
+/* Текстовое поле */
+.node textarea {
+    width: 100%;
+    height: 50px;
+    resize: none;
+    border: none;
+    font-size: 14px;
+    font-family: inherit;
+    background: transparent;
+    outline: none;
+    color: #444;
+}
+
+/* Кнопка удаления */
+.delete-btn {
+    background: none;
+    border: none;
+    color: #e53935;
+    font-size: 18px;
+    float: right;
+    cursor: pointer;
+}
+
+/* Линии */
+.lines {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Панель настроек */
+.settings-panel {
+    position: absolute;
+    top: 90px;
+    right: 20px;
+    background: white;
+    padding: 16px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    font-size: 14px;
+    z-index: 10;
+    max-width: 200px;
+}
+
+.settings-panel label {
+    display: block;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.settings-panel select,
+.settings-panel input[type="color"],
+.settings-panel input[type="range"] {
+    width: 100%;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.35);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+    animation: fadeInModal 0.3s ease;
+}
+
+@keyframes fadeInModal {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+.modal {
+    background: linear-gradient(145deg, #ffffff, #f2f2f2);
+    border-radius: 24px;
+    padding: 28px 32px;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+    font-family: 'Segoe UI', 'Comic Sans MS', sans-serif;
+    width: 100%;
+    max-width: 400px;
+    color: #333;
+    animation: slideUp 0.4s ease;
+}
+
+@keyframes slideUp {
+    0% { transform: translateY(40px); opacity: 0; }
+    100% { transform: translateY(0); opacity: 1; }
+}
+
+.modal h3 {
+    margin-top: 0;
+    font-size: 24px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+    color: #5e35b1;
+}
+
+.modal label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 12px;
+    font-size: 14px;
+}
+
+.modal select,
+.modal input[type="color"],
+.modal input[type="range"] {
+    width: 100%;
+    padding: 8px 12px;
+    margin-top: 6px;
+    margin-bottom: 16px;
+    border: 1px solid #ccc;
+    border-radius: 12px;
+    font-family: inherit;
+    font-size: 14px;
+    box-sizing: border-box;
+    background: #fff;
+}
+
+.modal input[type="color"] {
+    padding: 0;
+    height: 38px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 24px;
+}
+
+.modal-actions button {
+    flex: 1;
+    margin: 0 6px;
+    padding: 12px;
+    border: none;
+    border-radius: 18px;
+    font-weight: bold;
+    font-size: 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.modal-actions button:first-child {
+    background: #e0e0e0;
+    color: #333;
+}
+
+.modal-actions button:last-child {
+    background: linear-gradient(135deg, #7b1fa2, #ba68c8);
+    color: white;
+}
+
+.modal-actions button:hover {
+    transform: scale(1.04);
+}
+#mindmap-area {
+    min-width: 100vw;
+    min-height: 100vh;
+    overflow: visible;
+}

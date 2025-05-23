@@ -1,0 +1,13 @@
+/* src/styles/main.css */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    background: linear-gradient(to bottom right, #fff0f5, #e0f7fa);
+    color: #333;
+    overflow-x: hidden;
+}
