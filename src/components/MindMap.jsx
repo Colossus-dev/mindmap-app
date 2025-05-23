@@ -9,6 +9,26 @@ function MindMap() {
     const [offset, setOffset] = useState({ x: 0, y: 0 });
     const [showPanel, setShowPanel] = useState(true);
     const [showCreateModal, setShowCreateModal] = useState(false);
+    const [images, setImages] = useState([]);
+    const [draggingImageId, setDraggingImageId] = useState(null);
+    const [imageOffset, setImageOffset] = useState({ x: 0, y: 0 });
+    const [stickers, setStickers] = useState([]);
+    const [draggingStickerId, setDraggingStickerId] = useState(null);
+    const [stickerOffset, setStickerOffset] = useState({ x: 0, y: 0 });
+
+    const availableStickers = [
+        '/public/11.png',
+        '/public/12.png',
+        '/public/13.png',
+        '/public/14.png',
+        '/public/15.png',
+        '/public/16.png',
+        '/public/17.png',
+        '/public/18.png',
+        '/public/19.png',
+        '/public/20.png',
+    ];
+
     const [newNodeStyle, setNewNodeStyle] = useState({
         shape: 'rounded',
         cardColor: '#fff3e0',
@@ -141,6 +161,23 @@ function MindMap() {
             y: rect1.top - rect2.top + el.offsetHeight / 2,
         };
     };
+    const handleImageMouseDown = (id, e) => {
+        const image = images.find(img => img.id === id);
+        if (!image) return;
+        setImageOffset({ x: e.clientX - image.x, y: e.clientY - image.y });
+        setDraggingImageId(id);
+    };
+
+    const handleImageMouseMove = (e) => {
+        if (!draggingImageId) return;
+        setImages(images.map(img =>
+            img.id === draggingImageId
+                ? { ...img, x: e.clientX - imageOffset.x, y: e.clientY - imageOffset.y }
+                : img
+        ));
+    };
+
+    const handleImageMouseUp = () => setDraggingImageId(null);
 
     const createNodeWithStyle = () => {
         const newNode = {
@@ -155,8 +192,40 @@ function MindMap() {
         setShowCreateModal(false);
     };
 
+    const handleStickerMouseDown = (id, e) => {
+        const sticker = stickers.find(st => st.id === id);
+        if (!sticker) return;
+        setStickerOffset({ x: e.clientX - sticker.x, y: e.clientY - sticker.y });
+        setDraggingStickerId(id);
+    };
+
+    const handleStickerMouseMove = (e) => {
+        if (!draggingStickerId) return;
+        setStickers(stickers.map(st =>
+            st.id === draggingStickerId
+                ? { ...st, x: e.clientX - stickerOffset.x, y: e.clientY - stickerOffset.y }
+                : st
+        ));
+    };
+
+    const handleStickerMouseUp = () => setDraggingStickerId(null);
+
+
     return (
-        <div className="mindmap-container" onMouseMove={handleMouseMove} onMouseUp={handleMouseUp}>
+        <div
+            className="mindmap-container"
+            onMouseMove={(e) => {
+                handleMouseMove(e);
+                handleImageMouseMove(e);
+                handleStickerMouseMove(e);
+            }}
+            onMouseUp={() => {
+                handleMouseUp();
+                handleImageMouseUp();
+                handleStickerMouseUp();
+            }}
+
+        >
             <h1 className="header-banner">✨ Добро пожаловать в Мир Идей! ✨</h1>
             <button className="burger-toggle" onClick={() => setShowPanel(!showPanel)}>≡</button>
 
@@ -165,9 +234,134 @@ function MindMap() {
                     <button className="add-button" onClick={() => setShowCreateModal(true)}>➕ Добавить идею</button>
                     <button className="connect-button" onClick={connectNodes}>🔗 Связать</button>
                     <button className="export-btn" onClick={exportAsPNG}>🖼 Сохранить</button>
+                    <div
+                        style={{
+                            display: 'flex',
+                            flexWrap: 'wrap',
+                            gap: '12px',
+                            maxWidth: `${5 * (50 + 12)}px`, // 5 стикеров по 50px + отступы
+                            marginTop: '12px'
+                        }}
+                    >
+                        {availableStickers.map((src, idx) => (
+                            <img
+                                key={idx}
+                                src={src}
+                                alt={`sticker-${idx}`}
+                                style={{
+                                    width: 50,
+                                    height: 50,
+                                    cursor: 'pointer',
+                                    borderRadius: '8px',
+                                    border: '2px solid transparent',
+                                    transition: 'transform 0.2s ease'
+                                }}
+                                onClick={() => {
+                                    const newSticker = {
+                                        id: Date.now(),
+                                        x: 100 + Math.random() * 200,
+                                        y: 100 + Math.random() * 200,
+                                        src
+                                    };
+                                    setStickers((prev) => [...prev, newSticker]);
+                                }}
+                            />
+                        ))}
+                    </div>
+
+
+                    <input
+                        type="file"
+                        accept="image/*"
+                        style={{display: 'none'}}
+                        id="image-upload"
+                        onChange={(e) => {
+                            const file = e.target.files[0];
+                            if (file) {
+                                const reader = new FileReader();
+                                reader.onload = () => {
+                                    const img = {
+                                        id: Date.now(),
+                                        x: 100 + Math.random() * 200,
+                                        y: 100 + Math.random() * 200,
+                                        src: reader.result,
+                                    };
+                                    setImages(prev => [...prev, img]);
+                                };
+                                reader.readAsDataURL(file);
+                            }
+                        }}
+                    />
+                    <label htmlFor="image-upload" className="add-button">🖼 Добавить фото</label>
+
                 </div>
             )}
             <div id="mindmap-area">
+
+
+                {images.map((img) => (
+                    <div
+                        key={img.id}
+                        style={{
+                            position: 'absolute',
+                            top: img.y,
+                            left: img.x,
+                            width: '250px',
+                            height: '200px',
+                            zIndex: 3,
+                            cursor: 'move'
+                        }}
+                        onMouseDown={(e) => handleImageMouseDown(img.id, e)}
+                    >
+                        <img
+                            src={img.src}
+                            alt=""
+                            style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '12px' }}
+                        />
+                    </div>
+                ))}
+
+                {stickers.map((sticker) => (
+                    <div
+                        key={sticker.id}
+                        style={{
+                            position: 'absolute',
+                            top: sticker.y,
+                            left: sticker.x,
+                            width: '80px',
+                            height: '80px',
+                            zIndex: 3,
+                            cursor: 'move'
+                        }}
+                        onMouseDown={(e) => handleStickerMouseDown(sticker.id, e)}
+                    >
+                        <img
+                            src={sticker.src}
+                            alt=""
+                            style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                        />
+                        <button
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                setStickers(prev => prev.filter(s => s.id !== sticker.id));
+                            }}
+                            style={{
+                                position: 'absolute',
+                                top: '-10px',
+                                right: '-10px',
+                                background: '#ff4444',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '50%',
+                                width: '24px',
+                                height: '24px',
+                                fontWeight: 'bold',
+                                cursor: 'pointer',
+                                zIndex: 5
+                            }}
+                        >✖</button>
+                    </div>
+                ))}
 
                 <svg className="lines" width="100%" height="100%">
                     {nodes.map((node) =>
@@ -210,7 +404,8 @@ function MindMap() {
                         onMouseDown={(e) => handleMouseDown(node.id, e)}
                         onDoubleClick={() => toggleSelect(node.id)}
                     >
-          <textarea
+
+                        <textarea
               value={node.text}
               onChange={(e) => handleTextChange(node.id, e.target.value)}
               style={{
@@ -290,7 +485,7 @@ function MindMap() {
                 )}
             </div>
         </div>
-            );
-            }
+    );
+}
 
-            export default MindMap;
+export default MindMap;
