@@ -6,27 +6,27 @@ function MindMap() {
     const [nodes, setNodes] = useState([]);
     const [draggingNodeId, setDraggingNodeId] = useState(null);
     const [selectedNodes, setSelectedNodes] = useState([]);
-    const [offset, setOffset] = useState({ x: 0, y: 0 });
+    const [offset, setOffset] = useState({x: 0, y: 0});
     const [showPanel, setShowPanel] = useState(true);
     const [showCreateModal, setShowCreateModal] = useState(false);
     const [images, setImages] = useState([]);
     const [draggingImageId, setDraggingImageId] = useState(null);
-    const [imageOffset, setImageOffset] = useState({ x: 0, y: 0 });
+    const [imageOffset, setImageOffset] = useState({x: 0, y: 0});
     const [stickers, setStickers] = useState([]);
     const [draggingStickerId, setDraggingStickerId] = useState(null);
-    const [stickerOffset, setStickerOffset] = useState({ x: 0, y: 0 });
+    const [stickerOffset, setStickerOffset] = useState({x: 0, y: 0});
 
     const availableStickers = [
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTFSIOdDnSwdltTbz6NhAGS5PoAJbOwR5xaRQ&s',
-        'https://www.parazitakusok.ru/images/item/3381/item_96_1479227684_152.jpg',
-        'https://cdn-icons-png.flaticon.com/512/7871/7871481.png',
-        'https://i.pinimg.com/564x/4b/51/73/4b51731c6c178615c9e2da670404c192.jpg',
-        'https://www.parazitakusok.ru/images/item/3379/item_96_1479227387_931.jpg',
-        'https://cp-vl.ru/uploads/item/6c4/b26d5-1588250812_750x450.png',
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQdDVf-Q4cYw26jsk0Q2hnxuIIMGWH3o2vksQ&s',
-        'https://alfabank.servicecdn.ru/site-upload/6b/5d/5090/BenefitBlock_First.png',
-        'https://vinyl-market.ru/images/shop_items/865.jpg.webp',
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS-QOnGFxtROcUkICcQ7hzb_MRk1zutImfkdw&s',
+        'https://cdn-icons-png.flaticon.com/256/7273/7273762.png',
+        'https://res.cloudinary.com/teepublic/image/private/s--XRIwl-vh--/t_Resized%20Artwork/c_fit,g_north_west,h_1054,w_1054/co_ffffff,e_outline:53/co_ffffff,e_outline:inner_fill:53/co_bbbbbb,e_outline:3:1000/c_mpad,g_center,h_1260,w_1260/b_rgb:eeeeee/c_limit,f_auto,h_630,q_auto:good:420,w_630/v1598252879/production/designs/13351748_0.jpg',
+        'https://cdn-icons-png.flaticon.com/256/7183/7183462.png',
+        'https://cdn-icons-png.flaticon.com/256/7273/7273746.png',
+        'https://cdn-icons-png.flaticon.com/256/11946/11946426.png',
+        'https://cdn-icons-png.flaticon.com/256/9394/9394714.png',
+        'https://cdn-icons-png.flaticon.com/512/7279/7279895.png',
+        'https://cdn-icons-png.flaticon.com/256/5721/5721099.png',
+        'https://cdn-icons-png.flaticon.com/256/4861/4861842.png',
+        'https://cdn-icons-png.flaticon.com/256/5965/5965452.png',
     ];
 
     const [newNodeStyle, setNewNodeStyle] = useState({
@@ -50,7 +50,7 @@ function MindMap() {
     const handleMouseDown = (id, e) => {
         const node = nodes.find((n) => n.id === id);
         if (!node) return;
-        setOffset({ x: e.clientX - node.x, y: e.clientY - node.y });
+        setOffset({x: e.clientX - node.x, y: e.clientY - node.y});
         setDraggingNodeId(id);
     };
 
@@ -58,7 +58,7 @@ function MindMap() {
         if (!draggingNodeId) return;
         setNodes(nodes.map(node =>
             node.id === draggingNodeId
-                ? { ...node, x: e.clientX - offset.x, y: e.clientY - offset.y }
+                ? {...node, x: e.clientX - offset.x, y: e.clientY - offset.y}
                 : node
         ));
     };
@@ -66,7 +66,7 @@ function MindMap() {
     const handleMouseUp = () => setDraggingNodeId(null);
 
     const handleTextChange = (id, text) => {
-        setNodes(nodes.map(n => n.id === id ? { ...n, text } : n));
+        setNodes(nodes.map(n => n.id === id ? {...n, text} : n));
     };
 
     const deleteNode = (id) => {
@@ -88,10 +88,10 @@ function MindMap() {
             const [id1, id2] = selectedNodes;
             setNodes(nodes.map(node => {
                 if (node.id === id1 && !node.connections.includes(id2)) {
-                    return { ...node, connections: [...node.connections, id2] };
+                    return {...node, connections: [...node.connections, id2]};
                 }
                 if (node.id === id2 && !node.connections.includes(id1)) {
-                    return { ...node, connections: [...node.connections, id1] };
+                    return {...node, connections: [...node.connections, id1]};
                 }
                 return node;
             }));
@@ -130,8 +130,8 @@ function MindMap() {
 
         setTimeout(() => {
             html2canvas(clone, {
-                backgroundColor: '#ffffff',
-                scale:2,
+                backgroundColor: '#FFFASS',
+                scale: 2,
                 useCORS: true,
             }).then((canvas) => {
                 const link = document.createElement('a');
@@ -144,16 +144,10 @@ function MindMap() {
     };
 
 
-
-
-
-
-
-
     const getNodeDOMCenter = (id) => {
         const el = document.getElementById(`node-${id}`);
         const container = document.querySelector('.mindmap-container');
-        if (!el || !container) return { x: 0, y: 0 };
+        if (!el || !container) return {x: 0, y: 0};
         const rect1 = el.getBoundingClientRect();
         const rect2 = container.getBoundingClientRect();
         return {
@@ -161,10 +155,11 @@ function MindMap() {
             y: rect1.top - rect2.top + el.offsetHeight / 2,
         };
     };
+
     const handleImageMouseDown = (id, e) => {
         const image = images.find(img => img.id === id);
         if (!image) return;
-        setImageOffset({ x: e.clientX - image.x, y: e.clientY - image.y });
+        setImageOffset({x: e.clientX - image.x, y: e.clientY - image.y});
         setDraggingImageId(id);
     };
 
@@ -172,7 +167,7 @@ function MindMap() {
         if (!draggingImageId) return;
         setImages(images.map(img =>
             img.id === draggingImageId
-                ? { ...img, x: e.clientX - imageOffset.x, y: e.clientY - imageOffset.y }
+                ? {...img, x: e.clientX - imageOffset.x, y: e.clientY - imageOffset.y}
                 : img
         ));
     };
@@ -195,7 +190,7 @@ function MindMap() {
     const handleStickerMouseDown = (id, e) => {
         const sticker = stickers.find(st => st.id === id);
         if (!sticker) return;
-        setStickerOffset({ x: e.clientX - sticker.x, y: e.clientY - sticker.y });
+        setStickerOffset({x: e.clientX - sticker.x, y: e.clientY - sticker.y});
         setDraggingStickerId(id);
     };
 
@@ -203,13 +198,12 @@ function MindMap() {
         if (!draggingStickerId) return;
         setStickers(stickers.map(st =>
             st.id === draggingStickerId
-                ? { ...st, x: e.clientX - stickerOffset.x, y: e.clientY - stickerOffset.y }
+                ? {...st, x: e.clientX - stickerOffset.x, y: e.clientY - stickerOffset.y}
                 : st
         ));
     };
 
     const handleStickerMouseUp = () => setDraggingStickerId(null);
-
 
     return (
         <div
@@ -224,7 +218,6 @@ function MindMap() {
                 handleImageMouseUp();
                 handleStickerMouseUp();
             }}
-
         >
             <h1 className="header-banner">✨ Добро пожаловать в Мир Идей! ✨</h1>
             <button className="burger-toggle" onClick={() => setShowPanel(!showPanel)}>≡</button>
@@ -234,15 +227,14 @@ function MindMap() {
                     <button className="add-button" onClick={() => setShowCreateModal(true)}>➕ Добавить идею</button>
                     <button className="connect-button" onClick={connectNodes}>🔗 Связать</button>
                     <button className="export-btn" onClick={exportAsPNG}>🖼 Сохранить</button>
-                    <div
-                        style={{
-                            display: 'flex',
-                            flexWrap: 'wrap',
-                            gap: '12px',
-                            maxWidth: `${5 * (50 + 12)}px`, // 5 стикеров по 50px + отступы
-                            marginTop: '12px'
-                        }}
-                    >
+
+                    <div style={{
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        gap: '12px',
+                        maxWidth: `${5 * (50 + 12)}px`,
+                        marginTop: '12px'
+                    }}>
                         {availableStickers.map((src, idx) => (
                             <img
                                 key={idx}
@@ -263,12 +255,11 @@ function MindMap() {
                                         y: 100 + Math.random() * 200,
                                         src
                                     };
-                                    setStickers((prev) => [...prev, newSticker]);
+                                    setStickers(prev => [...prev, newSticker]);
                                 }}
                             />
                         ))}
                     </div>
-
 
                     <input
                         type="file"
@@ -293,12 +284,12 @@ function MindMap() {
                         }}
                     />
                     <label htmlFor="image-upload" className="add-button">🖼 Добавить фото</label>
-
                 </div>
             )}
+
             <div id="mindmap-area">
 
-
+                {/* Images */}
                 {images.map((img) => (
                     <div
                         key={img.id}
@@ -316,11 +307,12 @@ function MindMap() {
                         <img
                             src={img.src}
                             alt=""
-                            style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '12px' }}
+                            style={{width: '100%', height: '100%', objectFit: 'cover', borderRadius: '12px'}}
                         />
                     </div>
                 ))}
 
+                {/* Stickers */}
                 {stickers.map((sticker) => (
                     <div
                         key={sticker.id}
@@ -338,7 +330,7 @@ function MindMap() {
                         <img
                             src={sticker.src}
                             alt=""
-                            style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+                            style={{width: '100%', height: '100%', objectFit: 'contain'}}
                         />
                         <button
                             onClick={(e) => {
@@ -359,10 +351,12 @@ function MindMap() {
                                 cursor: 'pointer',
                                 zIndex: 5
                             }}
-                        >✖</button>
+                        >✖
+                        </button>
                     </div>
                 ))}
 
+                {/* Lines (svg) */}
                 <svg className="lines" width="100%" height="100%">
                     {nodes.map((node) =>
                         node.connections.map((connId) => {
@@ -383,6 +377,7 @@ function MindMap() {
                     )}
                 </svg>
 
+                {/* Nodes */}
                 {nodes.map((node) => (
                     <div
                         key={node.id}
@@ -399,13 +394,14 @@ function MindMap() {
                             boxShadow: node.style.shape === 'shadowed' ? '0 4px 12px rgba(0,0,0,0.2)' : 'none',
                             padding: '10px',
                             minWidth: '80px',
-                            minHeight: '40px'
+                            minHeight: '40px',
+                            position: 'absolute',
+                            zIndex: 3
                         }}
                         onMouseDown={(e) => handleMouseDown(node.id, e)}
                         onDoubleClick={() => toggleSelect(node.id)}
                     >
-
-                        <textarea
+          <textarea
               value={node.text}
               onChange={(e) => handleTextChange(node.id, e.target.value)}
               style={{
@@ -422,64 +418,15 @@ function MindMap() {
                   paddingTop: '15px'
               }}
           />
-
                         <button className="delete-btn" onClick={() => deleteNode(node.id)}>✖</button>
                     </div>
                 ))}
 
+                {/* Modal */}
                 {showCreateModal && (
                     <div className="modal-overlay">
                         <div className="modal">
-                            <h3>🆕 Создать новую идею</h3>
-
-                            <label>Форма:
-                                <select value={newNodeStyle.shape}
-                                        onChange={e => setNewNodeStyle({...newNodeStyle, shape: e.target.value})}>
-                                    <option value="rounded">Круглая</option>
-                                    <option value="square">Квадратная</option>
-                                    <option value="shadowed">С тенью</option>
-                                </select>
-                            </label>
-
-                            <label>Цвет карточки:
-                                <input type="color" value={newNodeStyle.cardColor}
-                                       onChange={e => setNewNodeStyle({...newNodeStyle, cardColor: e.target.value})}/>
-                            </label>
-
-                            <label>Цвет текста:
-                                <input type="color" value={newNodeStyle.textColor}
-                                       onChange={e => setNewNodeStyle({...newNodeStyle, textColor: e.target.value})}/>
-                            </label>
-
-                            <label>Цвет линий:
-                                <input type="color" value={newNodeStyle.lineColor}
-                                       onChange={e => setNewNodeStyle({...newNodeStyle, lineColor: e.target.value})}/>
-                            </label>
-
-                            <label>Шрифт:
-                                <select value={newNodeStyle.fontFamily}
-                                        onChange={e => setNewNodeStyle({...newNodeStyle, fontFamily: e.target.value})}>
-                                    <option value="Arial">Arial</option>
-                                    <option value="Comic Sans MS">Comic Sans MS</option>
-                                    <option value="Courier New">Courier New</option>
-                                    <option value="Georgia">Georgia</option>
-                                    <option value="Verdana">Verdana</option>
-                                </select>
-                            </label>
-
-                            <label>Размер текста:
-                                <input type="range" min="12" max="32" value={newNodeStyle.fontSize}
-                                       onChange={e => setNewNodeStyle({
-                                           ...newNodeStyle,
-                                           fontSize: parseInt(e.target.value)
-                                       })}/>
-                                <span>{newNodeStyle.fontSize}px</span>
-                            </label>
-
-                            <div className="modal-actions">
-                                <button onClick={() => setShowCreateModal(false)}>❌ Отмена</button>
-                                <button onClick={createNodeWithStyle}>✅ Создать</button>
-                            </div>
+                            {/* настройки */}
                         </div>
                     </div>
                 )}
