@@ -83,52 +83,46 @@ function MindMap() {
         const area = document.getElementById('mindmap-area');
         if (!area) return;
 
-        // Сохраняем текущие стили и временно убираем прозрачность
-        const originalOpacity = area.style.opacity;
-        const originalFilter = area.style.filter;
-        area.style.opacity = '1';
-        area.style.filter = 'none';
+        // Клонируем всю зону
+        const clone = area.cloneNode(true);
+        clone.style.position = 'absolute';
+        clone.style.top = '0';
+        clone.style.left = '0';
+        clone.style.zIndex = '-1';
+        clone.style.opacity = '1';
+        clone.style.background = '#ffffff';
 
-        // также уберём прозрачность у всех узлов
-        const nodes = area.querySelectorAll('.node');
-        const originalNodeStyles = [];
+        // Удаляем стили, создающие прозрачность
+        clone.querySelectorAll('*').forEach(el => {
+            el.style.opacity = '1';
+            el.style.filter = 'none';
+            el.style.backdropFilter = 'none';
 
-        nodes.forEach((node) => {
-            originalNodeStyles.push({
-                el: node,
-                opacity: node.style.opacity,
-                background: node.style.backgroundColor,
-            });
-
-            node.style.opacity = '1';
-            const computedBg = window.getComputedStyle(node).backgroundColor;
-            if (computedBg.includes('rgba')) {
-                const solid = computedBg.replace(/rgba\\(([^,]+),([^,]+),([^,]+),[^)]+\\)/, 'rgb($1,$2,$3)');
-                node.style.backgroundColor = solid;
+            // заменим rgba на rgb
+            const bg = window.getComputedStyle(el).backgroundColor;
+            if (bg.includes('rgba')) {
+                const rgb = bg.replace(/rgba\\(([^,]+),([^,]+),([^,]+),[^)]+\\)/, 'rgb($1,$2,$3)');
+                el.style.backgroundColor = rgb;
             }
         });
 
+        document.body.appendChild(clone);
+
         setTimeout(() => {
-            html2canvas(area, {
+            html2canvas(clone, {
                 backgroundColor: '#ffffff',
-                scale: 2,
+                scale:2,
                 useCORS: true,
             }).then((canvas) => {
                 const link = document.createElement('a');
                 link.download = 'mindmap.png';
                 link.href = canvas.toDataURL('image/png');
                 link.click();
-
-                // Восстанавливаем стили
-                area.style.opacity = originalOpacity;
-                area.style.filter = originalFilter;
-                originalNodeStyles.forEach(({ el, opacity, background }) => {
-                    el.style.opacity = opacity;
-                    el.style.backgroundColor = background;
-                });
+                document.body.removeChild(clone);
             });
         }, 100);
     };
+
 
 
 
